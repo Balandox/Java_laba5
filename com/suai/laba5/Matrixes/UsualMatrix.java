@@ -1,5 +1,7 @@
 package com.suai.laba5.Matrixes;
 
+import com.suai.laba5.Matrixes.IMatrix;
+import com.suai.laba5.Matrixes.SparseMatrix;
 import java.util.Scanner;
 import  java.util.Arrays;
 
@@ -45,36 +47,36 @@ public class UsualMatrix implements  IMatrix{
         return sb.toString();
     }
 
-    public UsualMatrix product(UsualMatrix m) {
+    public IMatrix product(IMatrix m) {
         if(m == null)
             throw new NullPointerException("Input matrix is a null parameter");
-        if(this.columns != m.rows)
+        if(this.columns != m.getRows())
             throw  new IllegalArgumentException("Amount of columns first matrix not equal amount of rows!");
 
-        UsualMatrix res = new UsualMatrix(this.rows, m.columns);
+        IMatrix res = new UsualMatrix(this.rows, m.getColumns());
         for (int i = 0; i < this.rows; i++) {
-            for (int j = 0; j < m.columns; j++) {
+            for (int j = 0; j < m.getColumns(); j++) {
                 for (int k = 0; k < this.columns; k++)
-                    res.data[i][j] += this.getElement(i, k) * m.getElement(k, j);
+                   res.setElement(i, j, this.getElement(i, k) * m.getElement(k, j));
             }
         }
         return res;
     }
 
-    public UsualMatrix sum(UsualMatrix m) {
+    public IMatrix sum(IMatrix m) {
         if(m == null)
             throw new NullPointerException("Input matrix is a null parameter");
 
-        if(this.rows != m.rows | this.columns != m.columns) {
+        if(this.rows != m.getRows() | this.columns != m.getColumns())
             throw new IllegalArgumentException("Matrix sizes are not equals!");
-        }
 
-        UsualMatrix res = new UsualMatrix(this.rows, this.columns);
-        for (int i = 0; i < this.data.length; i++)
+        IMatrix res = new UsualMatrix(this.rows, this.columns);
+        for (int i = 0; i < this.rows; i++)
             for (int j = 0; j < this.columns; j++)
-                res.data[i][j] = this.getElement(i, j) + m.getElement(i, j);
+                res.setElement(i, j, this.getElement(i, j) + m.getElement(i, j));
         return res;
     }
+
 
     public void setElement(int row, int col, int value) {
         if (row > this.rows | col > this.columns | row < 0 | col < 0)
@@ -89,6 +91,9 @@ public class UsualMatrix implements  IMatrix{
 
         return this.data[row][col];
     }
+
+    public int getRows(){return this.rows;}
+    public int getColumns(){return this.columns;}
 
     public final boolean equals(UsualMatrix m){
         return this.rows == m.rows & this.columns == m.columns & Arrays.deepEquals(this.data, m.data);
