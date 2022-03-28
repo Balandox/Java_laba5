@@ -16,14 +16,6 @@ public class SparseMatrix implements IMatrix{
             this.val = value;
         }
 
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null | ! (o instanceof Node)) return false;
-            Node node = (Node) o;
-            return this.rowIdx == node.rowIdx & this.colIdx == node.colIdx;
-        }
-
     }
 
     private final int rows;
@@ -40,16 +32,15 @@ public class SparseMatrix implements IMatrix{
             throw new IllegalArgumentException("This position does not exist!");
 
         ListIterator<Node> it = this.data.listIterator();
-        Node tmp = new Node(row, col, val);
 
         while(it.hasNext()){
             Node cmpObject = (Node)it.next();
-            if(tmp.equals(cmpObject)) {
+            if(cmpObject.rowIdx == row & cmpObject.colIdx == col) {
                 it.previous().val = val;
                 return;
             }
         }
-        this.data.add(tmp);
+        this.data.add(new Node(row, col, val));
     }
 
     public int getElement(int row, int col){
@@ -57,11 +48,10 @@ public class SparseMatrix implements IMatrix{
             throw new IllegalArgumentException("This position does not exist!");
 
         ListIterator<Node> it = this.data.listIterator();
-        Node tmp = new Node(row, col, 0);
 
         while(it.hasNext()){
             Node cmpObject = (Node)it.next();
-            if(tmp.equals(cmpObject))
+            if(cmpObject.rowIdx == row & cmpObject.colIdx == col)
                 return cmpObject.val;
         }
         return 0;
@@ -104,7 +94,6 @@ public class SparseMatrix implements IMatrix{
 
     public IMatrix sum(IMatrix m){
 
-
         if(m == null)
             throw new NullPointerException("Input matrix is a null parameter");
 
@@ -121,6 +110,20 @@ public class SparseMatrix implements IMatrix{
                     res.setElement(i, j, elem1 + elem2);
             }
         return res;
+    }
+
+    public final boolean equals(Object o){
+        if(!(o instanceof IMatrix))
+            return false;
+        IMatrix matrix = (IMatrix) o;
+        if(matrix.getColumns() != this.getColumns() & matrix.getRows() != this.getRows())
+            return false;
+        for(int i = 0; i < this.getRows(); i++)
+            for(int j = 0; j < this.getColumns(); j++){
+                if(!(this.getElement(i, j) == matrix.getElement(i, j)))
+                    return false;
+            }
+        return true;
     }
 
 }

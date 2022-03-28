@@ -7,7 +7,6 @@ public class SquareMatrix extends UsualMatrix implements IMatrix {
 
     public SquareMatrix(int size) {
         super(size, size);
-        SparseMatrix sm = new SparseMatrix(3, 4);
     }
 
 }

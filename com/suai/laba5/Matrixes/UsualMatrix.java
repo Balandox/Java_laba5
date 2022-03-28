@@ -2,6 +2,8 @@ package com.suai.laba5.Matrixes;
 
 import com.suai.laba5.Matrixes.IMatrix;
 import com.suai.laba5.Matrixes.SparseMatrix;
+
+import java.util.List;
 import java.util.Scanner;
 import  java.util.Arrays;
 
@@ -57,7 +59,7 @@ public class UsualMatrix implements  IMatrix{
         for (int i = 0; i < this.rows; i++) {
             for (int j = 0; j < m.getColumns(); j++) {
                 for (int k = 0; k < this.columns; k++)
-                   res.setElement(i, j, this.getElement(i, k) * m.getElement(k, j));
+                   res.setElement(i, j, res.getElement(i, j) + (this.getElement(i, k) * m.getElement(k, j)));
             }
         }
         return res;
@@ -95,8 +97,18 @@ public class UsualMatrix implements  IMatrix{
     public int getRows(){return this.rows;}
     public int getColumns(){return this.columns;}
 
-    public final boolean equals(UsualMatrix m){
-        return this.rows == m.rows & this.columns == m.columns & Arrays.deepEquals(this.data, m.data);
+    public final boolean equals(Object o){
+        if(!(o instanceof IMatrix))
+            return false;
+        IMatrix matrix = (IMatrix) o;
+        if(matrix.getColumns() != this.getColumns() & matrix.getRows() != this.getRows())
+            return false;
+        for(int i = 0; i < this.getRows(); i++)
+            for(int j = 0; j < this.getColumns(); j++){
+                if(!(this.getElement(i, j) == matrix.getElement(i, j)))
+                    return false;
+            }
+        return true;
     }
 
 }
