@@ -28,7 +28,7 @@ public class SparseMatrix implements IMatrix{
     }
 
     public void setElement(int row, int col, int val){
-        if (row > this.rows | col > this.columns | row < 0 | col < 0)
+        if (row >= this.rows | col >= this.columns | row < 0 | col < 0)
             throw new IllegalArgumentException("This position does not exist!");
 
         ListIterator<Node> it = this.data.listIterator();
@@ -74,16 +74,15 @@ public class SparseMatrix implements IMatrix{
             throw new NullPointerException("Input matrix is a null parameter");
         if(this.columns != m.getRows())
             throw  new IllegalArgumentException("Amount of columns first matrix not equal amount of rows!");
-
+        int resVal = 0;
         IMatrix res = new SparseMatrix(this.rows, m.getColumns());
         for (int i = 0; i < this.rows; i++) {
             for (int j = 0; j < m.getColumns(); j++) {
                 for (int k = 0; k < this.columns; k++) {
-                    int elem1 = this.getElement(i, k);
-                    int elem2 = m.getElement(k, j);
-                    if(elem1 != 0 & elem2 != 0)
-                        res.setElement(i, j, elem1 * elem2);
+                        resVal += this.getElement(i, k) * m.getElement(k, j);//res.setElement(i, j, elem1 * elem2);
                 }
+                res.setElement(i, j, resVal);
+                resVal = 0;
             }
         }
         return res;
